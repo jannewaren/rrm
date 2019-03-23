@@ -16,5 +16,24 @@ require 'rrm/filehandlers/travis'
 
 module Rrm
   class Error < StandardError; end
-  # Your code goes here...
+
+  def self.all_ruby_versions
+    @all_ruby_versions ||= fetch_all_ruby_versions
+  end
+
+  def self.fetch_all_ruby_versions
+    versions = []
+    html = open('https://www.ruby-lang.org/en/downloads/releases/')
+    doc = Nokogiri::HTML(html)
+    rows = doc.search('tr')
+    rows.each do |row|
+      ver = row.search('td').first.text
+      next if ver.include?('preview')
+      next if ver.include?('rc')
+      versions << ver.split(' ').last
+    rescue
+      next
+    end
+    versions.compact.sort
+  end
 end

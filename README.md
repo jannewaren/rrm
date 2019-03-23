@@ -6,13 +6,18 @@ Trying to make the repetitive task of updating Ruby (and gem dependencies) for m
 
 Give it some URL's to git repositories, and rrm will:
 * Clone each repository
-* Give you options (unless you chose already) to update to the latest patch, minor or major version of Ruby by updating
-  * Gemfile
-  * .gitlab-ci.yml
-  * .travis.yml
-  * .rubocop.yml
+* Update to the latest patch, minor or major version of Ruby by updating
   * Dockerfile
-* Run bundler inside Docker (with the new Ruby version) to upgrade Gemfile.lock
+  * Gemfile
+  * Gemfile.lock (by running bundle via Docker)
+  * .gitlab-ci.yml
+  * .rubocop.yml
+  * .travis.yml
+* Push changes in a new branch to remote
+
+Staying up to date with new Ruby versions on tens of projects should be easier than ever!
+
+Optionally you can update gems as well, either all of them or just some groups like dev and test.
 
 ## Running it
 
