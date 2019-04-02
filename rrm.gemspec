@@ -43,4 +43,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'nokogiri', '~> 1.10'
   spec.add_runtime_dependency 'docker-api', '~> 1.34'
   spec.add_runtime_dependency 'slop', '~> 4.6'
+  spec.add_runtime_dependency 'tty-progressbar', '~> 0.16.0'
 end

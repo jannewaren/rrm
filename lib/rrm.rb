@@ -1,21 +1,23 @@
-require 'highline'
-require 'git'
 require 'open-uri'
 require 'nokogiri'
 require 'docker'
-require 'slop'
 
-require 'rrm/version'
-require 'rrm/repository'
-require 'rrm/filehandlers/dockerfile'
-require 'rrm/filehandlers/gemfile'
-require 'rrm/filehandlers/gemfile_lock'
-require 'rrm/filehandlers/gitlab-ci'
-require 'rrm/filehandlers/rubocop'
-require 'rrm/filehandlers/travis'
+require_relative 'rrm/version'
+require_relative 'rrm/repository'
+require_relative 'rrm/updater'
+require_relative 'rrm/filehandlers/dockerfile'
+require_relative 'rrm/filehandlers/gemfile'
+require_relative 'rrm/filehandlers/gemfile_lock'
+require_relative 'rrm/filehandlers/gitlab-ci'
+require_relative 'rrm/filehandlers/rubocop'
+require_relative 'rrm/filehandlers/travis'
 
 module Rrm
   class Error < StandardError; end
+
+  def self.logger
+   @logger ||= Logger.new(STDOUT)
+  end
 
   def self.all_ruby_versions
     @all_ruby_versions ||= fetch_all_ruby_versions

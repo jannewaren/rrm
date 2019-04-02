@@ -4,7 +4,7 @@ RSpec.describe Rrm do
   end
 
   describe '#all_ruby_versions', vcr: { cassette_name: 'all_ruby_versions' } do
-    it 'include released normal versions' do
+    it 'includes some released normal versions' do
       expect(described_class.all_ruby_versions).is_a? Array
       expect(described_class.all_ruby_versions).to include '1.9.3'
       expect(described_class.all_ruby_versions).to include '2.1.2'

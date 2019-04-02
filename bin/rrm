@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'rrm'
+
+require 'highline'
+require 'slop'
+
+opts = Slop.parse do |o|
+  o.separator "Choose usage mode:"
+  o.bool '-n', '--non-interactive', 'use non-interactive mode giving all required options (default)'
+  o.bool '-i', '--interactive', 'use interactive mode, giving input as you go'
+
+  o.separator ""
+  o.separator "Required parameters"
+  o.array '-u', '--urls', 'comma-separated list of git repository clone urls', delimiter: ','
+
+  o.separator ""
+  o.separator "Choose what to update:"
+  o.bool  '--patch-next', 'update to next available Patch version from current version (eg. 2.3.4 from 2.3.3)'
+  o.bool  '--patch-latest', 'update to latest new Patch version from current version (eg. 2.3.8 from 2.3.3)'
+  o.bool  '--minor-next', 'update to next available Minor version from current version (eg. 2.4.5 from 2.3.3)'
+  o.bool  '--minor-latest', 'update to latest new Minor version from current version (eg. 2.6.2 from 2.5.3)'
+  o.bool  '--major-next', 'update to next available Major version from current version (eg. 2.6.2 from 1.9.3)'
+  o.bool  '--major-latest', 'update to latest new Major version from current version (eg. 2.6.2 from 1.9.3)'
+  o.bool  '--update-gems', 'update gems in Gemfile and Gemfile.lock'
+  o.array '--update-gems-groups', 'update gems in Gemfile and Gemfile.lock - but only for selected groups', delimiter: ','
+
+  o.separator ""
+  o.separator "Extra options:"
+
+  o.bool '-v', '--verbose', 'enable verbose mode'
+  o.bool '-q', '--quiet', 'suppress output (quiet mode)'
+
+  o.on '-h', '--help', 'show this help' do
+    puts o
+    exit
+  end
+
+  o.on '--list-ruby-versions', 'list all Ruby version available to rrm' do
+    puts Rrm.all_ruby_versions
+    exit
+  end
+
+  o.on '--version', 'print the version' do
+    puts "Ruby Repository Manager"
+    puts "rrm #{Rrm::VERSION}"
+    exit
+  end
+end
+
+if opts.non_interactive?
+  Rrm::Updater.new(opts).update_all
+elsif opts.interactive?
+  puts "Not yet implemented, sorry!"
+else
+  puts opts
+end
+
+
