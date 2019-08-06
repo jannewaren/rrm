@@ -36,20 +36,19 @@ module Rrm
     end
 
     def update!
-      Rrm.logger.debug "Updating to level #{level} - that means from #{current_version} to #{new_version}"
+      Rrm.logger.debug "Updating #{name} from #{current_version} to #{new_version}"
       create_branch
-      puts dockerfile.update!(new_version)
-      puts gemfile.update!(new_version)
-      puts gemfile_lock.update!(new_version)
-      puts gitlab_ci.update!(new_version)
-      puts rubocop.update!(new_version.split('.')[0..1].join('.'))
-      puts travis.update!(new_version)
+      dockerfile.update!(new_version)
+      gemfile.update!(new_version)
+      gemfile_lock.update!(new_version)
+      gitlab_ci.update!(new_version)
+      rubocop.update!(new_version.split('.')[0..1].join('.'))
+      travis.update!(new_version)
     rescue
       Rrm.logger.warn("Failed to update! #{$!.message} - #{$!.backtrace}")
     end
 
     def push!
-      puts "Pushing branch '#{@branch_name}' to '#{git.remote.url}'"
       git.push('origin', @branch_name)
     end
 

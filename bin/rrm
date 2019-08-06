@@ -7,10 +7,6 @@ require 'highline'
 require 'slop'
 
 opts = Slop.parse do |o|
-  o.separator "Choose usage mode:"
-  o.bool '-n', '--non-interactive', 'use non-interactive mode giving all required options (default)'
-  o.bool '-i', '--interactive', 'use interactive mode, giving input as you go'
-
   o.separator ""
   o.separator "Required parameters"
   o.array '-u', '--urls', 'comma-separated list of git repository clone urls', delimiter: ','
@@ -24,14 +20,11 @@ opts = Slop.parse do |o|
   o.bool  '--major-next', 'update to next available Major version from current version (eg. 2.6.2 from 1.9.3)'
   o.bool  '--major-latest', 'update to latest new Major version from current version (eg. 2.6.2 from 1.9.3)'
   o.bool  '--update-gems', 'update gems in Gemfile and Gemfile.lock'
-  o.array '--update-gems-groups', 'update gems in Gemfile and Gemfile.lock - but only for selected groups', delimiter: ','
 
   o.separator ""
   o.separator "Extra options:"
 
   o.array '-e', '--env', 'List environment variables to pass into the Docker container (for example to authenticate in case you have private gems)', delimiter: ','
-  o.bool '-v', '--verbose', 'enable verbose mode'
-  o.bool '-q', '--quiet', 'suppress output (quiet mode)'
 
   o.on '-h', '--help', 'show this help' do
     puts o
@@ -50,12 +43,4 @@ opts = Slop.parse do |o|
   end
 end
 
-if opts.non_interactive?
-  Rrm::Updater.new(opts).update_all
-elsif opts.interactive?
-  puts "Not yet implemented, sorry!"
-else
-  puts opts
-end
-
-
+Rrm::Updater.new(opts).update_all

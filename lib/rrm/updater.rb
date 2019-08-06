@@ -9,17 +9,16 @@ module Rrm
     # the console application in bin/rrm. Example
     #
     # { :urls => [
-#         [0] "git@gitlab.com:kickban/form-kickban-fi.git"
-#     ],
-#       :patch_next => false,
-#       :patch_latest => true,
-#       :minor_next => false,
-#       :minor_latest => false,
-#       :major_next => false,
-#       :major_latest => false,
-#       :update_gems => false,
-#       :update_gems_groups => []
-#     }
+    #         [0] "git@gitlab.com:kickban/form-kickban-fi.git"
+    #     ],
+    #       :patch_next => false,
+    #       :patch_latest => true,
+    #       :minor_next => false,
+    #       :minor_latest => false,
+    #       :major_next => false,
+    #       :major_latest => false,
+    #       :update_gems => false
+    #     }
     def initialize(options)
       $env_variables = options[:env]
 
@@ -40,13 +39,26 @@ module Rrm
     end
 
     def update_all
-      bar = TTY::ProgressBar.new("Updating repositories (:current of :total) [:bar]", total: all_repositories.size, width: 30)
+      Rrm.logger.debug "Available normal Ruby versions: #{Rrm.all_ruby_versions}"
       all_repositories.each do |repository|
-        puts "Repository name: #{repository.name}"
-        puts "Current Ruby version: #{repository.current_version}"
+        puts "#{repository.name} from #{repository.current_version} to #{repository.new_version}"
+      end
+
+      bar = TTY::ProgressBar.new("Running upgrades (:current of :total) [:bar]", total: all_repositories.size, width: 30)
+      all_repositories.each do |repository|
         repository.update!
+        bar.advance(1)
+      end
+
+      bar = TTY::ProgressBar.new("Pushing branches (:current of :total) [:bar]", total: all_repositories.size, width: 30)
+      all_repositories.each do |repository|
         repository.push!
         bar.advance(1)
+      end
+
+      puts "Pushed branches:"
+      all_repositories.each do |repository|
+        puts "#{repository.branch_name} (#{repository.git.remote.url})"
       end
     end
 

@@ -22,7 +22,7 @@ module Rrm
       container.store_file("/#{GEMFILE}", File.read("#{git.dir.path}/#{GEMFILE}"))
       container.store_file("/#{FILENAME}", File.read("#{git.dir.path}/#{FILENAME}")) unless update_gems
       container.start
-      puts "bundle install running... please wait"
+      Rrm.logger.debug "Running 'bundle' inside Docker, please wait. Timeout is #{TIMEOUT_SECONDS} seconds"
       container.wait(TIMEOUT_SECONDS)
       new_content = container.read_file("/#{FILENAME}")
       container.stop

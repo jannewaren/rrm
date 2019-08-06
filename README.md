@@ -43,3 +43,12 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Rrm project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/jannewaren/rrm/blob/master/CODE_OF_CONDUCT.md).
+
+
+## TODO
+
+* Interactive mode with some fancy ncurses dialogs etc
+* Only update gems in selected groups (to easily update development dependencies more often for example)
+* Ways to limit or increase output (--quiet mode and --verbose mode)
+* Make proper documentation and refactor all the classes so it could be used as a gem/library inside other projects. For example a Slack bot to update things?
+* 
