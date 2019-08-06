@@ -4,6 +4,7 @@ module Rrm
   class GemfileLock
     GEMFILE = 'Gemfile'
     FILENAME = 'Gemfile.lock'
+    TIMEOUT_SECONDS = 240
 
     attr_accessor :git, :content, :new_version, :update_gems
 
@@ -17,12 +18,12 @@ module Rrm
 
     def update!(new_version)
       image = Docker::Image.create('fromImage' => "ruby:#{new_version}")
-      container = Docker::Container.create('Cmd' => 'bundle', 'Image' => "ruby:#{new_version}")
+      container = Docker::Container.create('Cmd' => 'bundle', 'Image' => "ruby:#{new_version}", 'Env' => env_options)
       container.store_file("/#{GEMFILE}", File.read("#{git.dir.path}/#{GEMFILE}"))
       container.store_file("/#{FILENAME}", File.read("#{git.dir.path}/#{FILENAME}")) unless update_gems
       container.start
       puts "bundle install running... please wait"
-      container.wait(120)
+      container.wait(TIMEOUT_SECONDS)
       new_content = container.read_file("/#{FILENAME}")
       container.stop
       file = File.open("#{git.dir.path}/#{FILENAME}", 'w')
@@ -32,6 +33,15 @@ module Rrm
     end
 
     private
+
+    def env_options
+      arr = []
+      $env_variables.each do |e|
+        arr << "#{e}=#{ENV[e]}"
+      end
+      Rrm.logger.debug "Passing #{$env_variables} to Docker as Env"
+      arr
+    end
 
     def commit_message(new_version)
       msg = "Updating #{FILENAME} to Ruby #{new_version}"

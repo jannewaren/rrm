@@ -29,6 +29,7 @@ opts = Slop.parse do |o|
   o.separator ""
   o.separator "Extra options:"
 
+  o.array '-e', '--env', 'List environment variables to pass into the Docker container (for example to authenticate in case you have private gems)', delimiter: ','
   o.bool '-v', '--verbose', 'enable verbose mode'
   o.bool '-q', '--quiet', 'suppress output (quiet mode)'
 

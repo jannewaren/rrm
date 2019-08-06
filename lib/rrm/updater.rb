@@ -21,6 +21,8 @@ module Rrm
 #       :update_gems_groups => []
 #     }
     def initialize(options)
+      $env_variables = options[:env]
+
       @options = options
       if options[:major_latest]
         @level = :major_latest
