@@ -115,7 +115,7 @@ module Rrm
     end
 
     def patch_latest
-      all.select{|v| v == ("#{major}.#{minor}.")}.last
+      all.select{|v| v.start_with?("#{major}.#{minor}.")}.last
     rescue
       nil
     end
