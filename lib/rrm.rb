@@ -15,7 +15,7 @@ module Rrm
   class Error < StandardError; end
 
   def self.logger
-   @logger ||= Logger.new('log/rrm.log')
+   @logger ||= Logger.new('/tmp/rrm/rrm.log')
   end
 
   def self.all_ruby_versions

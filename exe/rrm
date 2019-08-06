@@ -43,4 +43,8 @@ opts = Slop.parse do |o|
   end
 end
 
-Rrm::Updater.new(opts).update_all
+if opts[:urls].empty? || (opts[:patch])
+  puts opts
+else
+  Rrm::Updater.new(opts).update_all
+end

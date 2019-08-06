@@ -134,9 +134,9 @@ module Rrm
     end
 
     def fetch_current_version
-      line = git.gblob('Gemfile').grep('ruby ')['Gemfile'].flatten
-      return nil unless line.last.include?('ruby ')
-      line.last.match(/(\d.\d.\d)/).to_s
+      line = git.object('master:Gemfile').grep('ruby ').flatten.last
+      return nil unless line.flatten.last.include?('ruby ')
+      line.flatten.last.match(/(\d.\d.\d)/).to_s
     rescue
       Rrm.logger.warn("fetch_current_version not found for #{name} - #{$!.message} - #{$!.backtrace}")
       nil

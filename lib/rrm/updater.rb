@@ -39,6 +39,8 @@ module Rrm
     end
 
     def update_all
+      raise "Choose what to update" if @level.nil?
+
       Rrm.logger.debug "Available normal Ruby versions: #{Rrm.all_ruby_versions}"
       all_repositories.each do |repository|
         puts "#{repository.name} from #{repository.current_version} to #{repository.new_version}"
