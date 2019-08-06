@@ -18,6 +18,10 @@ Give it some URL's to git repositories, and rrm will:
 
 Staying up to date with new Ruby versions on tens of projects should be easier than ever!
 
+## DEMO!
+
+![](rrm.mov.gif)
+
 ## Running it
 
 ### Requirements
