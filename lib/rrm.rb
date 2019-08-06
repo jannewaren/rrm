@@ -1,6 +1,5 @@
 require 'open-uri'
 require 'nokogiri'
-require 'docker'
 
 require_relative 'rrm/version'
 require_relative 'rrm/repository'
@@ -32,6 +31,7 @@ module Rrm
       ver = row.search('td').first.text
       next if ver.include?('preview')
       next if ver.include?('rc')
+      next if ver.include?('-p')
       versions << ver.split(' ').last
     rescue
       next

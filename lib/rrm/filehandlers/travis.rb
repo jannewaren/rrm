@@ -3,8 +3,24 @@ module Rrm
     FILENAME = '.travis.yml'
     PATTERN  = /rvm:\s+-\s(\d.\d.\d)/
 
-    def initialize(content)
-      @content = content
+    attr_accessor :git, :content, :new_version
+
+    def initialize(git)
+      @content = File.read("#{git.dir.path}/#{FILENAME}")
+      @git = git
+    rescue
+      @content = nil
+    end
+
+    def update!(new_version)
+      new_content = content.gsub(/(rvm:\s+-\s)(\d.\d.\d)/, ('\1'+new_version))
+      file = File.open("#{git.dir.path}/#{FILENAME}", 'w')
+      file.puts new_content
+      file.close
+      git.commit_all("Updating #{FILENAME} to Ruby #{new_version}")
+    rescue
+      Rrm.logger.debug("Could not update #{FILENAME} because #{$!.message}")
+      nil
     end
 
     def ruby_version
