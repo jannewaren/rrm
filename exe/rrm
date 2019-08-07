@@ -6,6 +6,8 @@ require 'rrm'
 require 'highline'
 require 'slop'
 
+FileUtils.mkdir_p('/tmp/rrm/')
+
 opts = Slop.parse do |o|
   o.separator ""
   o.separator "Required parameters"

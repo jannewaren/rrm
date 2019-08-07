@@ -69,3 +69,4 @@ Everyone interacting in the Rrm project’s codebases, issue trackers, chat room
 * Ways to limit or increase output (--quiet mode and --verbose mode)
 * Make proper documentation and refactor all the classes so it could be used as a gem/library inside other projects. For example a Slack bot to update things?
 * Is it okay to just pollute the users /tmp/ files like this?
+* Add an option to automatically create merge requests / pull requests in Gitlab/Github
