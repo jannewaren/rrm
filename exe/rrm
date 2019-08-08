@@ -15,18 +15,18 @@ opts = Slop.parse do |o|
 
   o.separator ""
   o.separator "Choose what to update:"
-  o.bool  '--patch-next', 'update to next available Patch version from current version (eg. 2.3.4 from 2.3.3)'
-  o.bool  '--patch-latest', 'update to latest new Patch version from current version (eg. 2.3.8 from 2.3.3)'
-  o.bool  '--minor-next', 'update to next available Minor version from current version (eg. 2.4.5 from 2.3.3)'
-  o.bool  '--minor-latest', 'update to latest new Minor version from current version (eg. 2.6.2 from 2.5.3)'
-  o.bool  '--major-next', 'update to next available Major version from current version (eg. 2.6.2 from 1.9.3)'
-  o.bool  '--major-latest', 'update to latest new Major version from current version (eg. 2.6.2 from 1.9.3)'
-  o.bool  '--update-gems', 'update gems in Gemfile and Gemfile.lock'
+  o.bool  '--patch-next',   'next Patch version   (eg. 2.3.3 -> 2.3.4)'
+  o.bool  '--patch-latest', 'latest Patch version (eg. 2.3.3 -> 2.3.8)'
+  o.bool  '--minor-next',   'next Minor version   (eg. 2.3.3 -> 2.4.5)'
+  o.bool  '--minor-latest', 'latest Minor version (eg. 2.3.3 -> 2.6.2)'
+  o.bool  '--major-next',   'next Major version   (eg. 1.9.3 -> 2.6.2)'
+  o.bool  '--major-latest', 'latest Major version (eg. 1.9.3 -> 2.6.2)'
+  o.bool  '--update-gems',  'update gems in Gemfile.lock'
 
   o.separator ""
   o.separator "Extra options:"
 
-  o.array '-e', '--env', 'List environment variables to pass into the Docker container (for example to authenticate in case you have private gems)', delimiter: ','
+  o.array '-e', '--env', 'List environment variables to pass into the Docker container', delimiter: ','
 
   o.on '-h', '--help', 'show this help' do
     puts o
