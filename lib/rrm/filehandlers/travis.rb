@@ -18,8 +18,9 @@ module Rrm
       file.puts new_content
       file.close
       git.commit_all("Updating #{FILENAME} to Ruby #{new_version}")
-    rescue
+    rescue StandardError
       Rrm.logger.debug("Could not update #{FILENAME} because #{$!.message}")
+      Rrm.logger.info("This is considered a non-fatal error. Continuing with updates.")
       nil
     end
 

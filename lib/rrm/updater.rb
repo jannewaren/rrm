@@ -44,23 +44,15 @@ module Rrm
       Rrm.logger.debug "Available normal Ruby versions: #{Rrm.all_ruby_versions}"
       all_repositories.each do |repository|
         puts "#{repository.name} from #{repository.current_version} to #{repository.new_version}"
-      end
-
-      bar = TTY::ProgressBar.new("Running upgrades (:current of :total) [:bar]", total: all_repositories.size, width: 30)
-      all_repositories.each do |repository|
+        bar = TTY::ProgressBar.new("Running upgrades (:current of :total) [:bar]", total: all_repositories.size, width: 30)
         repository.update!
-        bar.advance(1)
-      end
-
-      bar = TTY::ProgressBar.new("Pushing branches (:current of :total) [:bar]", total: all_repositories.size, width: 30)
-      all_repositories.each do |repository|
         repository.push!
-        bar.advance(1)
-      end
-
-      puts "Pushed branches:"
-      all_repositories.each do |repository|
+        puts "Pushed branches:"
         puts "#{repository.branch_name} (#{repository.git.remote.url})"
+        bar.advance(1)
+      rescue Rrm::FailRepository
+        puts "Skipping #{repository.name} because: #{$!.message}"
+        next
       end
     end
 

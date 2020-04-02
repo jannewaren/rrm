@@ -4,7 +4,7 @@ module Rrm
   class GemfileLock
     GEMFILE = 'Gemfile'
     FILENAME = 'Gemfile.lock'
-    TIMEOUT_SECONDS = 240
+    TIMEOUT_SECONDS = 600
 
     attr_accessor :git, :content, :new_version, :update_gems
 
@@ -30,6 +30,9 @@ module Rrm
       file.puts new_content
       file.close
       git.commit_all(commit_message(new_version))
+    rescue StandardError
+      Rrm.logger.warn("#{FILENAME} update failed: #{$!.message}")
+      raise Rrm::FailRepository, "Updating the #{FILENAME} failed."
     end
 
     private

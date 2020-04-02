@@ -2,6 +2,8 @@ require 'git'
 require 'securerandom'
 
 module Rrm
+
+  class FailRepository < StandardError; end
   class Repository
     CLONEDIR = "/tmp/rrm/#{SecureRandom.uuid}/"
 
@@ -44,8 +46,6 @@ module Rrm
       gitlab_ci.update!(new_version)
       rubocop.update!(new_version.split('.')[0..1].join('.'))
       travis.update!(new_version)
-    rescue
-      Rrm.logger.warn("Failed to update! #{$!.message} - #{$!.backtrace}")
     end
 
     def push!
