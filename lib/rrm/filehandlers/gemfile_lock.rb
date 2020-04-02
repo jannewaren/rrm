@@ -5,6 +5,7 @@ module Rrm
     GEMFILE = 'Gemfile'
     FILENAME = 'Gemfile.lock'
     TIMEOUT_SECONDS = 600
+    BUNDLED_WITH_PATTERN = /BUNDLED WITH$\s*(\d*.\d*.\d*)/
 
     attr_accessor :git, :content, :new_version, :update_gems
 
@@ -15,17 +16,24 @@ module Rrm
     rescue
       @content = nil
     end
-
+    
     def update!(new_version)
-      image = Docker::Image.create('fromImage' => "ruby:#{new_version}")
-      container = Docker::Container.create('Cmd' => 'bundle', 'Image' => "ruby:#{new_version}", 'Env' => env_options)
-      container.store_file("/#{GEMFILE}", File.read("#{git.dir.path}/#{GEMFILE}"))
-      container.store_file("/#{FILENAME}", File.read("#{git.dir.path}/#{FILENAME}")) unless update_gems
-      container.start
       Rrm.logger.debug "Running 'bundle' inside Docker, please wait. Timeout is #{TIMEOUT_SECONDS} seconds"
+      base_container = Docker::Container.create('Cmd' => ["gem", "install", "bundler:#{detect_bundler_version}"], 'Image' => "ruby:#{new_version}")
+      base_container.start
+      base_container.wait(TIMEOUT_SECONDS)
+      image = base_container.commit
+      image.tag('repo' => "rrm-ruby", 'tag' => new_version)
+
+      container = Docker::Container.create('Cmd' => ['bundle'], 'Image' => "rrm-ruby:#{new_version}", 'Env' => env_options)
+      container.store_file("/#{GEMFILE}", File.read("#{git.dir.path}/#{GEMFILE}"))
+      container.store_file("/#{FILENAME}", content) unless update_gems
+      container.start
       container.wait(TIMEOUT_SECONDS)
+
       new_content = container.read_file("/#{FILENAME}")
       container.stop
+
       file = File.open("#{git.dir.path}/#{FILENAME}", 'w')
       file.puts new_content
       file.close
@@ -56,6 +64,12 @@ module Rrm
       git.diff.first.patch.split("\n").select{|s| s.start_with?('+')}.select{|s| s.include?("(")}.size
     rescue
       "?"
+    end
+
+    def detect_bundler_version
+      version = content.match(BUNDLED_WITH_PATTERN).captures.first
+      Rrm.logger.debug("Bundler version is #{version}")
+      version
     end
   end
 end

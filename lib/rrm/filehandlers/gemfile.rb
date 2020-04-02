@@ -1,7 +1,7 @@
 module Rrm
   class Gemfile
     FILENAME = 'Gemfile'
-    PATTERN = /^ruby ['"](\d.\d.\d)['"]/
+    PATTERN = /^ruby ['"](\d*.\d*.\d*)['"]/
 
     attr_accessor :git, :content, :new_version
 

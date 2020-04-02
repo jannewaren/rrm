@@ -136,6 +136,7 @@ module Rrm
     def fetch_current_version
       line = git.object('master:Gemfile').grep('ruby ').flatten.last
       return nil unless line.flatten.last.include?('ruby ')
+      # TODO: This will not work for too high patch levels like 2.4.10 ???
       line.flatten.last.match(/(\d.\d.\d)/).to_s
     rescue
       Rrm.logger.warn("fetch_current_version not found for #{name} - #{$!.message} - #{$!.backtrace}")
