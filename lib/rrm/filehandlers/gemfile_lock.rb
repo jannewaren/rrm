@@ -19,6 +19,7 @@ module Rrm
     
     def update!(new_version)
       Rrm.logger.debug "Running 'bundle' inside Docker, please wait. Timeout is #{TIMEOUT_SECONDS} seconds"
+      image = Docker::Image.create(fromImage: 'ruby', tag: new_version)
       base_container = Docker::Container.create('Cmd' => ["gem", "install", "bundler:#{detect_bundler_version}"], 'Image' => "ruby:#{new_version}")
       base_container.start
       base_container.wait(TIMEOUT_SECONDS)

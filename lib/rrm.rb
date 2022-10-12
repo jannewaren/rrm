@@ -1,5 +1,5 @@
-require 'open-uri'
 require 'nokogiri'
+require 'net/http'
 
 require_relative 'rrm/version'
 require_relative 'rrm/repository'
@@ -24,7 +24,8 @@ module Rrm
 
   def self.fetch_all_ruby_versions
     versions = []
-    html = open('https://www.ruby-lang.org/en/downloads/releases/')
+    uri = URI('https://www.ruby-lang.org/en/downloads/releases/')
+    html = Net::HTTP.get(uri)
     doc = Nokogiri::HTML(html)
     rows = doc.search('tr')
     rows.each do |row|
@@ -36,6 +37,6 @@ module Rrm
     rescue
       next
     end
-    versions.compact.sort
+    versions.compact.sort_by{ |version| Gem::Version.new(version) }
   end
 end

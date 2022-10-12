@@ -3,7 +3,6 @@ SimpleCov.start
 
 require 'bundler/setup'
 require 'rrm'
-require 'byebug'
 
 RSpec.configure do |config|
   config.example_status_persistence_file_path = ".rspec_status"
